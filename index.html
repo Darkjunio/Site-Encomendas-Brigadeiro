@@ -1,100 +1,62 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Encomendas de Brigadeiro</title>
   <style>
-    :root {
-      --rosa: #e91e63;
-      --rosa-escuro: #c2185b;
-      --fundo-claro: #fff8f0;
-      --fundo-cartao: #fff;
-      --borda: #ddd;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: var(--fundo-claro);
-      color: #333;
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #fff8f0;
     }
     header {
-      background: var(--rosa);
+      background: #e91e63;
       color: white;
       padding: 20px;
       text-align: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     main {
       padding: 20px;
-      max-width: 700px;
+      max-width: 600px;
       margin: auto;
     }
     h2 {
-      margin-top: 30px;
-      color: var(--rosa-escuro);
-      text-align: center;
+      color: #c2185b;
     }
     .form-group, .product, .combo, .cart {
-      margin-bottom: 20px;
-      background: var(--fundo-cartao);
-      border: 1px solid var(--borda);
-      border-radius: 8px;
+      background: white;
       padding: 15px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     label {
       display: block;
       margin-bottom: 5px;
-      font-weight: bold;
     }
     input[type="text"], input[type="date"], input[type="number"] {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       margin-bottom: 10px;
       border: 1px solid #ccc;
       border-radius: 4px;
     }
     button {
-      background: var(--rosa);
+      background: #e91e63;
       color: white;
+      padding: 10px;
       border: none;
-      padding: 12px;
-      width: 100%;
-      border-radius: 6px;
-      font-size: 16px;
+      border-radius: 4px;
       cursor: pointer;
-      transition: 0.3s;
+      width: 100%;
+      font-size: 16px;
     }
     button:hover {
-      background: var(--rosa-escuro);
+      background: #c2185b;
     }
-    .cart ul {
-      list-style: none;
-      padding: 0;
-    }
-    .cart li {
-      border-bottom: 1px solid #eee;
-      padding: 6px 0;
-    }
-    .total {
-      text-align: right;
-      font-size: 18px;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-    @media (max-width: 600px) {
-      h1, h2 {
-        font-size: 20px;
-      }
-      button {
-        font-size: 14px;
-        padding: 10px;
-      }
+    ul {
+      padding-left: 20px;
     }
   </style>
 </head>
@@ -119,19 +81,15 @@
 
     <h2>Sabores Individuais - R$ 3,00</h2>
     <div class="product">
-      <label>Beijinho:</label>
-      <input type="number" id="beijinho" value="0" min="0">
-      <label>Nutella:</label>
-      <input type="number" id="nutella" value="0" min="0">
-      <label>Ninho com Nutella:</label>
-      <input type="number" id="ninho" value="0" min="0">
-      <label>Tradicional:</label>
-      <input type="number" id="tradicional" value="0" min="0">
+      <label>Beijinho:</label><input type="number" id="beijinho" value="0" min="0">
+      <label>Nutella:</label><input type="number" id="nutella" value="0" min="0">
+      <label>Ninho com Nutella:</label><input type="number" id="ninho" value="0" min="0">
+      <label>Tradicional:</label><input type="number" id="tradicional" value="0" min="0">
     </div>
 
     <h2>Combo Promocional - 4 por R$ 10,00</h2>
     <div class="combo">
-      <label>Escolha até 4 sabores para o combo:</label>
+      <label>Sabores do combo:</label>
       <input type="text" id="comboSabores" placeholder="Ex: Nutella, Beijinho, Ninho, Tradicional">
     </div>
 
@@ -140,12 +98,20 @@
     <div class="cart">
       <h2>🛒 Carrinho</h2>
       <ul id="carrinho"></ul>
-      <p class="total">Total: R$ <span id="total">0.00</span></p>
+      <p><strong>Total: R$ <span id="total">0.00</span></strong></p>
       <button onclick="enviarPedido()">Finalizar Pedido via WhatsApp</button>
     </div>
   </main>
 
   <script>
+    // Bloquear datas passadas
+    const inputData = document.getElementById("dataEntrega");
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+    const dia = String(hoje.getDate()).padStart(2, "0");
+    inputData.min = `${ano}-${mes}-${dia}`;
+
     let total = 0;
     let itens = [];
 
@@ -164,7 +130,7 @@
         if (qtd > 0) {
           let preco = qtd * precoUnitario;
           total += preco;
-          itens.push(`${qtd}x ${sabor.charAt(0).toUpperCase() + sabor.slice(1)} (R$ ${preco.toFixed(2)})`);
+          itens.push(`${qtd}x ${sabor} (R$ ${preco.toFixed(2)})`);
         }
       });
 
@@ -201,15 +167,12 @@
 
       let mensagem = `🍫 NOVA ENCOMENDA 🍬%0A%0A` +
                      `👤 Cliente: ${nome}%0A` +
-                     `📅 Data da entrega: ${data}%0A` +
+                     `📅 Entrega: ${data}%0A` +
                      `🧁 Itens:%0A- ` + itens.join('%0A- ') + `%0A` +
                      `💵 Total: R$ ${total.toFixed(2)}%0A` +
-                     `📝 Observações: ${obs || 'Nenhuma'}%0A%0A` +
-                     `Enviado pelo site oficial.`;
+                     `📝 Observações: ${obs || 'Nenhuma'}`;
 
-      let telefone = '5561993768275';
-      let url = `https://wa.me/${telefone}?text=${mensagem}`;
-      window.open(url, '_blank');
+      window.open(`https://wa.me/5561993768275?text=${mensagem}`, '_blank');
     }
   </script>
 </body>
