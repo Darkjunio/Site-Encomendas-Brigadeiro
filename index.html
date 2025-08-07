@@ -2,181 +2,293 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Encomendas de Brigadeiros</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <style>
     body {
       background-color: #fff8f5;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding-bottom: 80px; /* espaço para botão whatsapp fixo */
+    }
+    header {
+      background: #e91e63;
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    h1, h2 {
+      font-weight: 700;
     }
     .brigadeiro-card img {
-      height: 100px;
+      height: 120px;
       object-fit: cover;
+      border-radius: 8px;
     }
-    .whatsapp-btn {
+    .card-title {
+      color: #c2185b;
+      font-weight: 600;
+    }
+    .btn-whatsapp {
       position: fixed;
       bottom: 20px;
       right: 20px;
       background-color: #25d366;
-      color: white;
       border: none;
       border-radius: 50%;
       width: 60px;
       height: 60px;
       font-size: 30px;
+      color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
       display: flex;
-      align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      align-items: center;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    .btn-whatsapp:hover {
+      background-color: #1ebe5a;
+    }
+    #carrinho button {
+      margin-left: 10px;
+    }
+    .combo-desc {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 0.5rem;
     }
   </style>
 </head>
 <body>
-  <div class="container py-5">
-    <h1 class="text-center mb-4">Brigadeiros que derretem no coração 💖</h1>
 
-    <div class="row" id="sabores">
-      <!-- Sabores Individuais -->
+<header>
+  <h1>🍫 Encomendas de Brigadeiros</h1>
+  <p>Entrega apenas na Faculdade · WhatsApp: (61) 99376-8275</p>
+</header>
+
+<div class="container">
+
+  <section id="sabores" class="mb-5">
+    <h2>Escolha seus sabores</h2>
+    <div class="row g-3">
+      <!-- Cards serão gerados por JS -->
     </div>
+  </section>
 
-    <h2 class="mt-5">Combos Promocionais</h2>
-    <div class="row" id="combos">
-      <!-- Combos -->
+  <section id="combos" class="mb-5">
+    <h2>Combos Promocionais</h2>
+    <div class="row g-3">
+      <!-- Combos gerados por JS -->
     </div>
+  </section>
 
-    <h2 class="mt-5">Carrinho</h2>
-    <ul class="list-group" id="carrinho"></ul>
-    <div class="mt-3">
-      <strong>Total: R$ <span id="total">0.00</span></strong>
-    </div>
+  <section id="carrinho" class="mb-5">
+    <h2>Carrinho</h2>
+    <ul class="list-group mb-3" id="lista-carrinho"></ul>
+    <p><strong>Total: R$ <span id="total">0.00</span></strong></p>
+    <button class="btn btn-success" onclick="finalizarPedido()">Finalizar pedido via WhatsApp</button>
+  </section>
 
-    <h2 class="mt-5">Finalizar Pedido</h2>
-    <form id="pedidoForm">
-      <div class="mb-3">
+  <section id="pedido" class="mb-5">
+    <h2>Dados para entrega</h2>
+    <form id="pedidoForm" class="row g-3">
+      <div class="col-md-6">
         <label for="nome" class="form-label">Seu nome</label>
-        <input type="text" class="form-control" id="nome" required>
+        <input type="text" id="nome" class="form-control" required />
       </div>
-      <div class="mb-3">
-        <label class="form-label">Local de entrega</label>
-        <input type="text" class="form-control" value="Faculdade" disabled>
-      </div>
-      <div class="mb-3">
+      <div class="col-md-6">
         <label for="data" class="form-label">Data de entrega</label>
-        <input type="date" class="form-control" id="data" required>
+        <input type="date" id="data" class="form-control" required />
       </div>
-      <div class="mb-3">
+      <div class="col-12">
+        <label class="form-label">Local de entrega</label>
+        <input type="text" class="form-control" value="Faculdade" disabled />
+      </div>
+      <div class="col-12">
         <label for="obs" class="form-label">Observações</label>
-        <textarea class="form-control" id="obs"></textarea>
+        <textarea id="obs" class="form-control" rows="3" placeholder="Ex: Favor embalar com cuidado"></textarea>
       </div>
-      <button type="submit" class="btn btn-success">Finalizar via WhatsApp</button>
     </form>
-  </div>
+  </section>
 
-  <button class="whatsapp-btn" onclick="finalizarPedido()">
-    💬
-  </button>
+</div>
 
-  <script>
-    const sabores = [
-      "Tradicional",
-      "Ninho",
-      "Morango",
-      "Ninho com Nutella",
-      "Meio Amargo",
-      "Beijinho"
-    ];
+<button class="btn-whatsapp" onclick="finalizarPedido()">💬</button>
 
-    const combos = [
-      { nome: "Combo 6 unidades", preco: 16 },
-      { nome: "Combo 12 unidades + caixa decorada", preco: 32 },
-      { nome: "Presente Surpresa (3 sabores)", preco: 20 }
-    ];
+<script>
+  const sabores = [
+    "Tradicional",
+    "Ninho",
+    "Morango",
+    "Ninho com Nutella",
+    "Meio Amargo",
+    "Beijinho"
+  ];
 
-    const carrinho = [];
+  const combos = [
+    { nome: "Combo 6 unidades", preco: 16, permiteEscolha: true },
+    { nome: "Combo 12 unidades", preco: 30, permiteEscolha: true },
+    { nome: "Combo Surpresa 6 unidades", preco: 20, permiteEscolha: false },
+    { nome: "Combo Surpresa 12 unidades", preco: 38, permiteEscolha: false }
+  ];
 
-    function atualizarCarrinho() {
-      const lista = document.getElementById("carrinho");
-      const totalSpan = document.getElementById("total");
-      lista.innerHTML = "";
-      let total = 0;
-      carrinho.forEach((item, i) => {
-        const li = document.createElement("li");
-        li.className = "list-group-item d-flex justify-content-between align-items-center";
-        li.innerHTML = `${item.nome} (x${item.qtd}) - R$ ${(item.qtd * item.preco).toFixed(2)}
-        <button class="btn btn-sm btn-danger" onclick="removerItem(${i})">Remover</button>`;
-        lista.appendChild(li);
-        total += item.qtd * item.preco;
-      });
-      totalSpan.textContent = total.toFixed(2);
-    }
+  let carrinho = [];
 
-    function adicionarItem(nome, preco) {
-      const existente = carrinho.find(item => item.nome === nome);
-      if (existente) {
-        existente.qtd++;
-      } else {
-        carrinho.push({ nome, preco, qtd: 1 });
-      }
-      atualizarCarrinho();
-    }
-
-    function removerItem(index) {
-      carrinho.splice(index, 1);
-      atualizarCarrinho();
-    }
-
-    function gerarCards() {
-      const saboresDiv = document.getElementById("sabores");
-      sabores.forEach(sabor => {
-        const col = document.createElement("div");
-        col.className = "col-md-4 mb-4";
-        col.innerHTML = `
-          <div class="card brigadeiro-card">
-            <img src="https://source.unsplash.com/200x100/?brigadeiro,${sabor}" class="card-img-top" alt="${sabor}">
-            <div class="card-body">
-              <h5 class="card-title">${sabor}</h5>
-              <p class="card-text">R$ 3,00 por unidade</p>
-              <button class="btn btn-primary" onclick="adicionarItem('${sabor}', 3)">Adicionar</button>
-            </div>
+  // Gera os cards de sabores
+  function gerarSabores() {
+    const container = document.querySelector("#sabores .row");
+    sabores.forEach(sabor => {
+      const col = document.createElement("div");
+      col.className = "col-md-4";
+      col.innerHTML = `
+        <div class="card brigadeiro-card shadow-sm">
+          <img src="https://source.unsplash.com/200x120/?brigadeiro,${encodeURIComponent(sabor)}" alt="${sabor}" class="card-img-top" />
+          <div class="card-body">
+            <h5 class="card-title">${sabor}</h5>
+            <p class="card-text">R$ 3,00 por unidade</p>
+            <button class="btn btn-primary" onclick="adicionarItem('${sabor}', 3)">Adicionar 1</button>
           </div>
-        `;
-        saboresDiv.appendChild(col);
-      });
-
-      const combosDiv = document.getElementById("combos");
-      combos.forEach(combo => {
-        const col = document.createElement("div");
-        col.className = "col-md-4 mb-4";
-        col.innerHTML = `
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">${combo.nome}</h5>
-              <p class="card-text">R$ ${combo.preco.toFixed(2)}</p>
-              <button class="btn btn-warning" onclick="adicionarItem('${combo.nome}', ${combo.preco})">Adicionar</button>
-            </div>
-          </div>
-        `;
-        combosDiv.appendChild(col);
-      });
-    }
-
-    document.getElementById("pedidoForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      finalizarPedido();
+        </div>
+      `;
+      container.appendChild(col);
     });
+  }
 
-    function finalizarPedido() {
-      if (carrinho.length === 0) return alert("Seu carrinho está vazio!");
-      const nome = document.getElementById("nome").value;
-      const data = document.getElementById("data").value;
-      const obs = document.getElementById("obs").value;
-      const resumo = carrinho.map(i => `${i.nome} (x${i.qtd})`).join("%0A");
-      const mensagem = `Olá! Meu nome é ${nome}.%0A%0AQuero fazer um pedido para entrega na Faculdade, no dia ${data}.%0A%0APedido:%0A${resumo}%0A%0AObservações: ${obs}`;
-      window.open(`https://wa.me/5561993768275?text=${mensagem}`);
+  // Gera os combos
+  function gerarCombos() {
+    const container = document.querySelector("#combos .row");
+    combos.forEach((combo, index) => {
+      const col = document.createElement("div");
+      col.className = "col-md-6";
+      let escolha = "";
+      if (combo.permiteEscolha) {
+        escolha = `
+          <label>Escolha os sabores (${combo.nome}):</label>
+          <select multiple class="form-select mb-2" id="comboSabores${index}">
+            ${sabores.map(s => `<option value="${s}">${s}</option>`).join("")}
+          </select>
+        `;
+      } else {
+        escolha = `<p class="combo-desc">Sabores surpresa, você só descobre quando receber!</p>`;
+      }
+      col.innerHTML = `
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">${combo.nome}</h5>
+            <p class="card-text">R$ ${combo.preco.toFixed(2)}</p>
+            ${escolha}
+            <button class="btn btn-warning" onclick="adicionarCombo(${index})">Adicionar ao carrinho</button>
+          </div>
+        </div>
+      `;
+      container.appendChild(col);
+    });
+  }
+
+  function adicionarItem(nome, preco) {
+    let item = carrinho.find(i => i.nome === nome);
+    if (item) {
+      item.qtd++;
+    } else {
+      carrinho.push({ nome, preco, qtd: 1 });
+    }
+    atualizarCarrinho();
+  }
+
+  function adicionarCombo(index) {
+    const combo = combos[index];
+    let saboresEscolhidos = [];
+    if (combo.permiteEscolha) {
+      const select = document.getElementById(`comboSabores${index}`);
+      saboresEscolhidos = Array.from(select.selectedOptions).map(o => o.value);
+      if (saboresEscolhidos.length === 0) {
+        alert("Selecione ao menos um sabor para o combo!");
+        return;
+      }
+    }
+    // Adiciona combo ao carrinho
+    carrinho.push({ nome: combo.nome, preco: combo.preco, qtd: 1, sabores: saboresEscolhidos });
+    atualizarCarrinho();
+  }
+
+  function atualizarCarrinho() {
+    const lista = document.getElementById("lista-carrinho");
+    const totalSpan = document.getElementById("total");
+    lista.innerHTML = "";
+    let total = 0;
+    carrinho.forEach((item, index) => {
+      const li = document.createElement("li");
+      li.className = "list-group-item d-flex justify-content-between align-items-center";
+      let detalhes = item.sabores && item.sabores.length ? ` - Sabores: ${item.sabores.join(", ")}` : "";
+      li.innerHTML = `
+        <div>
+          <strong>${item.nome}</strong> (x${item.qtd})${detalhes} - R$ ${(item.preco * item.qtd).toFixed(2)}
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="removerItem(${index})">Remover</button>
+      `;
+      lista.appendChild(li);
+      total += item.preco * item.qtd;
+    });
+    totalSpan.textContent = total.toFixed(2);
+  }
+
+  function removerItem(index) {
+    carrinho.splice(index, 1);
+    atualizarCarrinho();
+  }
+
+  function finalizarPedido() {
+    const nome = document.getElementById("nome").value.trim();
+    const data = document.getElementById("data").value;
+    const obs = document.getElementById("obs").value.trim();
+
+    if (!nome) {
+      alert("Por favor, informe seu nome.");
+      return;
+    }
+    if (!data) {
+      alert("Por favor, informe a data de entrega.");
+      return;
+    }
+    if (carrinho.length === 0) {
+      alert("Seu carrinho está vazio.");
+      return;
     }
 
-    gerarCards();
-  </script>
+    let mensagem = `Olá! Meu nome é ${nome}.%0A%0AQuero fazer o pedido para entrega na Faculdade no dia ${data}.%0A%0APedido:%0A`;
+    carrinho.forEach(item => {
+      let detalhes = "";
+      if (item.sabores && item.sabores.length) {
+        detalhes = ` (Sabores: ${item.sabores.join(", ")})`;
+      }
+      mensagem += `- ${item.nome} x${item.qtd}${detalhes} - R$ ${(item.preco * item.qtd).toFixed(2)}%0A`;
+    });
+    const total = carrinho.reduce((acc, i) => acc + i.preco * i.qtd, 0);
+    mensagem += `%0ATotal: R$ ${total.toFixed(2)}%0A`;
+    mensagem += `Local de entrega: Faculdade%0A`;
+    mensagem += `Observações: ${obs || "Nenhuma"}`;
+
+    window.open(`https://wa.me/5561993768275?text=${mensagem}`, "_blank");
+  }
+
+  // Bloqueia datas passadas no input de data
+  function bloquearDatasPassadas() {
+    const inputData = document.getElementById("data");
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+    const dia = String(hoje.getDate()).padStart(2, "0");
+    inputData.min = `${ano}-${mes}-${dia}`;
+  }
+
+  bloquearDatasPassadas();
+  gerarSabores();
+  gerarCombos();
+  atualizarCarrinho();
+
+</script>
+
 </body>
 </html>
