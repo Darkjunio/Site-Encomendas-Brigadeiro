@@ -431,16 +431,36 @@
         atualizarTotalSelecionado();
       });
 
+      // ALTERAÇÃO PARA LIBERAR APAGAR NO MOBILE:
       inputQty.addEventListener('input', () => {
-        let val = parseInt(inputQty.value);
-        if (isNaN(val) || val < 1) {
-          val = 1;
-          inputQty.value = val;
+        const valStr = inputQty.value;
+        if (valStr === '') {
+          // Usuário apagou tudo, remove do objeto temporário
+          delete saboresSelecionadosModal[sabor];
+          atualizarTotalSelecionado();
+          return;
+        }
+        let val = parseInt(valStr);
+        if (isNaN(val)) {
+          return;
         }
         if (val > comboAtualQtd) {
           val = comboAtualQtd;
           inputQty.value = val;
         }
+        saboresSelecionadosModal[sabor] = val;
+        atualizarTotalSelecionado();
+      });
+
+      inputQty.addEventListener('blur', () => {
+        let val = parseInt(inputQty.value);
+        if (isNaN(val) || val < 1) {
+          val = 1;
+        }
+        if (val > comboAtualQtd) {
+          val = comboAtualQtd;
+        }
+        inputQty.value = val;
         saboresSelecionadosModal[sabor] = val;
         atualizarTotalSelecionado();
       });
