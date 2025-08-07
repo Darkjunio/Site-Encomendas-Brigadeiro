@@ -1,154 +1,201 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Encomendas de Brigadeiros</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <style>
-    body {
-      background-color: #fff8f5;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding-bottom: 80px; /* espaço para botão whatsapp fixo */
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Encomendas de Brigadeiros</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+  body {
+    background: #fff8f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .brigadeiro-card img {
+    height: 100px;
+    object-fit: cover;
+  }
+  #carrinhoFixo {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    width: 300px;
+    max-height: 70vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    padding: 15px;
+    z-index: 1050;
+  }
+  #carrinhoFixo h4 {
+    margin-bottom: 15px;
+  }
+  .quantity-controls button {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    font-weight: bold;
+    font-size: 18px;
+  }
+  @media (max-width: 768px) {
+    #carrinhoFixo {
+      position: static;
+      width: 100%;
+      max-height: none;
+      margin-top: 20px;
     }
-    header {
-      background: #e91e63;
-      color: white;
-      padding: 2rem 1rem;
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    h1, h2 {
-      font-weight: 700;
-    }
-    .brigadeiro-card img {
-      height: 120px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-    .card-title {
-      color: #c2185b;
-      font-weight: 600;
-    }
-    .btn-whatsapp {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: #25d366;
-      border: none;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      font-size: 30px;
-      color: white;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      z-index: 1000;
-    }
-    .btn-whatsapp:hover {
-      background-color: #1ebe5a;
-    }
-    #carrinho button {
-      margin-left: 10px;
-    }
-    .combo-desc {
-      font-size: 0.9rem;
-      color: #555;
-      margin-bottom: 0.5rem;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
+<div class="container py-4">
+  <h1 class="text-center mb-4">Brigadeiros que Derretem no Coração 💖</h1>
 
-<header>
-  <h1>🍫 Encomendas de Brigadeiros</h1>
-  <p>Entrega apenas na Faculdade · WhatsApp: (61) 99376-8275</p>
-</header>
+  <section id="sabores" class="row gy-4">
+    <!-- Sabores Individuais aqui via JS -->
+  </section>
 
-<div class="container">
-
-  <section id="sabores" class="mb-5">
-    <h2>Escolha seus sabores</h2>
-    <div class="row g-3">
-      <!-- Cards serão gerados por JS -->
+  <h2 class="mt-5">Combos Promocionais</h2>
+  <div class="row gy-4" id="combos">
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Combo 6 unidades - R$ 16,00</h5>
+          <p>Escolha 6 sabores</p>
+          <button class="btn btn-warning w-100" onclick="abrirModalSabores(6, 16, 'Combo 6 unidades')">Selecionar Sabores</button>
+        </div>
+      </div>
     </div>
-  </section>
 
-  <section id="combos" class="mb-5">
-    <h2>Combos Promocionais</h2>
-    <div class="row g-3">
-      <!-- Combos gerados por JS -->
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Combo 12 unidades + caixa decorada - R$ 30,00</h5>
+          <p>Escolha 12 sabores</p>
+          <button class="btn btn-warning w-100" onclick="abrirModalSabores(12, 30, 'Combo 12 unidades')">Selecionar Sabores</button>
+        </div>
+      </div>
     </div>
-  </section>
 
-  <section id="carrinho" class="mb-5">
-    <h2>Carrinho</h2>
-    <ul class="list-group mb-3" id="lista-carrinho"></ul>
-    <p><strong>Total: R$ <span id="total">0.00</span></strong></p>
-    <button class="btn btn-success" onclick="finalizarPedido()">Finalizar pedido via WhatsApp</button>
-  </section>
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Presente Surpresa 6 unidades - R$ 18,00</h5>
+          <p>Sabores surpresa (aleatório)</p>
+          <button class="btn btn-danger w-100" onclick="addSurpresa(6, 18)">Adicionar ao Carrinho</button>
+        </div>
+      </div>
+    </div>
 
-  <section id="pedido" class="mb-5">
-    <h2>Dados para entrega</h2>
-    <form id="pedidoForm" class="row g-3">
-      <div class="col-md-6">
-        <label for="nome" class="form-label">Seu nome</label>
-        <input type="text" id="nome" class="form-control" required />
+    <div class="col-md-4 mt-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Presente Surpresa 12 unidades - R$ 34,00</h5>
+          <p>Sabores surpresa (aleatório)</p>
+          <button class="btn btn-danger w-100" onclick="addSurpresa(12, 34)">Adicionar ao Carrinho</button>
+        </div>
       </div>
-      <div class="col-md-6">
-        <label for="data" class="form-label">Data de entrega</label>
-        <input type="date" id="data" class="form-control" required />
-      </div>
-      <div class="col-12">
-        <label class="form-label">Local de entrega</label>
-        <input type="text" class="form-control" value="Faculdade" disabled />
-      </div>
-      <div class="col-12">
-        <label for="obs" class="form-label">Observações</label>
-        <textarea id="obs" class="form-control" rows="3" placeholder="Ex: Favor embalar com cuidado"></textarea>
-      </div>
-    </form>
-  </section>
+    </div>
+  </div>
 
+  <form id="pedidoForm" class="mt-5">
+    <h2>Finalizar Pedido</h2>
+    <div class="mb-3">
+      <label for="nome" class="form-label">Seu Nome</label>
+      <input type="text" class="form-control" id="nome" required />
+    </div>
+
+    <div class="mb-3">
+      <label for="localEntrega" class="form-label">Local de Entrega</label>
+      <input type="text" class="form-control" id="localEntrega" value="Faculdade" disabled />
+    </div>
+
+    <div class="mb-3">
+      <label for="dataEntrega" class="form-label">Data de Entrega</label>
+      <input type="date" class="form-control" id="dataEntrega" required />
+    </div>
+
+    <div class="mb-3">
+      <label for="observacoes" class="form-label">Observações</label>
+      <textarea class="form-control" id="observacoes" rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100">Finalizar Pedido via WhatsApp</button>
+  </form>
 </div>
 
-<button class="btn-whatsapp" onclick="finalizarPedido()">💬</button>
+<!-- Carrinho fixo -->
+<div id="carrinhoFixo" aria-live="polite" aria-atomic="true" aria-label="Carrinho de compras">
+  <h4>Carrinho 🛒</h4>
+  <ul class="list-group mb-3" id="listaCarrinho"></ul>
+  <div class="d-flex justify-content-between fw-bold fs-5">
+    <span>Total:</span>
+    <span id="totalCarrinho">R$ 0,00</span>
+  </div>
+</div>
 
+<!-- Modal Seleção Sabores -->
+<div class="modal fade" id="modalSabores" tabindex="-1" aria-labelledby="modalSaboresLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalSaboresLabel">Selecionar Sabores</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body" id="modalSaboresBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnConfirmarSabores">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Alert Custom -->
+<div class="modal fade" id="modalAlert" tabindex="-1" aria-labelledby="modalAlertLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAlertLabel">Atenção</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body" id="modalAlertBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+  // Dados e estado
   const sabores = [
-    "Tradicional",
-    "Ninho",
-    "Morango",
-    "Ninho com Nutella",
-    "Meio Amargo",
-    "Beijinho"
-  ];
-
-  const combos = [
-    { nome: "Combo 6 unidades", preco: 16, permiteEscolha: true },
-    { nome: "Combo 12 unidades", preco: 30, permiteEscolha: true },
-    { nome: "Combo Surpresa 6 unidades", preco: 20, permiteEscolha: false },
-    { nome: "Combo Surpresa 12 unidades", preco: 38, permiteEscolha: false }
+    "Ninho", "Tradicional", "Morango",
+    "Ninho com Nutella", "Meio Amargo", "Beijinho"
   ];
 
   let carrinho = [];
 
-  // Gera os cards de sabores
-  function gerarSabores() {
-    const container = document.querySelector("#sabores .row");
+  // Monta os cards dos sabores individuais com controles de qtd
+  function montarSabores() {
+    const container = document.getElementById('sabores');
+    container.innerHTML = '';
     sabores.forEach(sabor => {
-      const col = document.createElement("div");
-      col.className = "col-md-4";
+      const col = document.createElement('div');
+      col.className = 'col-md-4';
+
       col.innerHTML = `
-        <div class="card brigadeiro-card shadow-sm">
-          <img src="https://source.unsplash.com/200x120/?brigadeiro,${encodeURIComponent(sabor)}" alt="${sabor}" class="card-img-top" />
+        <div class="card brigadeiro-card shadow-sm mb-3">
+          <img src="https://source.unsplash.com/200x100/?brigadeiro,${encodeURIComponent(sabor)}" class="card-img-top" alt="${sabor}">
           <div class="card-body">
             <h5 class="card-title">${sabor}</h5>
             <p class="card-text">R$ 3,00 por unidade</p>
-            <button class="btn btn-primary" onclick="adicionarItem('${sabor}', 3)">Adicionar 1</button>
+            <div class="d-flex align-items-center quantity-controls">
+              <button class="btn btn-outline-danger me-2" aria-label="Diminuir quantidade" onclick="alterarQtd('${sabor}', -1)">−</button>
+              <span id="qtd-${sabor}" class="me-2">0</span>
+              <button class="btn btn-outline-success" aria-label="Aumentar quantidade" onclick="alterarQtd('${sabor}', 1)">+</button>
+            </div>
           </div>
         </div>
       `;
@@ -156,139 +203,211 @@
     });
   }
 
-  // Gera os combos
-  function gerarCombos() {
-    const container = document.querySelector("#combos .row");
-    combos.forEach((combo, index) => {
-      const col = document.createElement("div");
-      col.className = "col-md-6";
-      let escolha = "";
-      if (combo.permiteEscolha) {
-        escolha = `
-          <label>Escolha os sabores (${combo.nome}):</label>
-          <select multiple class="form-select mb-2" id="comboSabores${index}">
-            ${sabores.map(s => `<option value="${s}">${s}</option>`).join("")}
-          </select>
-        `;
-      } else {
-        escolha = `<p class="combo-desc">Sabores surpresa, você só descobre quando receber!</p>`;
-      }
-      col.innerHTML = `
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title">${combo.nome}</h5>
-            <p class="card-text">R$ ${combo.preco.toFixed(2)}</p>
-            ${escolha}
-            <button class="btn btn-warning" onclick="adicionarCombo(${index})">Adicionar ao carrinho</button>
-          </div>
-        </div>
-      `;
-      container.appendChild(col);
-    });
-  }
-
-  function adicionarItem(nome, preco) {
-    let item = carrinho.find(i => i.nome === nome);
+  // Altera quantidade do sabor e atualiza carrinho
+  function alterarQtd(sabor, delta) {
+    const item = carrinho.find(i => i.nome === sabor && !i.combo);
     if (item) {
-      item.qtd++;
-    } else {
-      carrinho.push({ nome, preco, qtd: 1 });
-    }
-    atualizarCarrinho();
-  }
-
-  function adicionarCombo(index) {
-    const combo = combos[index];
-    let saboresEscolhidos = [];
-    if (combo.permiteEscolha) {
-      const select = document.getElementById(`comboSabores${index}`);
-      saboresEscolhidos = Array.from(select.selectedOptions).map(o => o.value);
-      if (saboresEscolhidos.length === 0) {
-        alert("Selecione ao menos um sabor para o combo!");
-        return;
+      item.qtd += delta;
+      if (item.qtd <= 0) {
+        carrinho = carrinho.filter(i => i !== item);
       }
+    } else if (delta > 0) {
+      carrinho.push({ nome: sabor, preco: 3, qtd: 1, combo: false });
     }
-    // Adiciona combo ao carrinho
-    carrinho.push({ nome: combo.nome, preco: combo.preco, qtd: 1, sabores: saboresEscolhidos });
-    atualizarCarrinho();
+    atualizarQtdNaTela(sabor);
+    atualizarCarrinhoFixo();
   }
 
-  function atualizarCarrinho() {
-    const lista = document.getElementById("lista-carrinho");
-    const totalSpan = document.getElementById("total");
-    lista.innerHTML = "";
+  // Atualiza qtd mostrada no card sabor
+  function atualizarQtdNaTela(sabor) {
+    const span = document.getElementById(`qtd-${sabor}`);
+    const item = carrinho.find(i => i.nome === sabor && !i.combo);
+    span.textContent = item ? item.qtd : 0;
+  }
+
+  // Atualiza carrinho fixo (lista + total)
+  function atualizarCarrinhoFixo() {
+    const lista = document.getElementById('listaCarrinho');
+    lista.innerHTML = '';
     let total = 0;
+
     carrinho.forEach((item, index) => {
-      const li = document.createElement("li");
-      li.className = "list-group-item d-flex justify-content-between align-items-center";
-      let detalhes = item.sabores && item.sabores.length ? ` - Sabores: ${item.sabores.join(", ")}` : "";
+      total += item.preco * item.qtd;
+      const li = document.createElement('li');
+      li.className = 'list-group-item d-flex justify-content-between align-items-center';
+
+      let detalhes = item.combo && item.detalhes ? ` - Sabores: ${item.detalhes}` : '';
+
       li.innerHTML = `
         <div>
-          <strong>${item.nome}</strong> (x${item.qtd})${detalhes} - R$ ${(item.preco * item.qtd).toFixed(2)}
+          <strong>${item.nome}</strong> x${item.qtd}${detalhes}
         </div>
-        <button class="btn btn-danger btn-sm" onclick="removerItem(${index})">Remover</button>
+        <div class="d-flex align-items-center gap-2">
+          <div>R$ ${(item.preco * item.qtd).toFixed(2)}</div>
+          <button aria-label="Remover item" class="btn btn-sm btn-danger" onclick="removerItem(${index})">×</button>
+        </div>
       `;
       lista.appendChild(li);
-      total += item.preco * item.qtd;
+
+      // Atualiza quantidade visual dos sabores individuais também
+      if (!item.combo) atualizarQtdNaTela(item.nome);
     });
-    totalSpan.textContent = total.toFixed(2);
+
+    document.getElementById('totalCarrinho').textContent = `R$ ${total.toFixed(2)}`;
   }
 
-  function removerItem(index) {
-    carrinho.splice(index, 1);
-    atualizarCarrinho();
+  // Remove item do carrinho
+  function removerItem(idx) {
+    const item = carrinho[idx];
+    carrinho.splice(idx, 1);
+    atualizarCarrinhoFixo();
+    if (!item.combo) atualizarQtdNaTela(item.nome);
   }
 
-  function finalizarPedido() {
-    const nome = document.getElementById("nome").value.trim();
-    const data = document.getElementById("data").value;
-    const obs = document.getElementById("obs").value.trim();
+  // Modal Bootstrap
+  const modalSabores = new bootstrap.Modal(document.getElementById('modalSabores'));
+  const modalAlert = new bootstrap.Modal(document.getElementById('modalAlert'));
+
+  // Abre modal para escolher sabores do combo
+  let comboAtualQtd = 0;
+  let comboAtualPreco = 0;
+  let comboAtualNome = '';
+
+  function abrirModalSabores(qtd, preco, nome) {
+    comboAtualQtd = qtd;
+    comboAtualPreco = preco;
+    comboAtualNome = nome;
+
+    const modalBody = document.getElementById('modalSaboresBody');
+    modalBody.innerHTML = '';
+
+    sabores.forEach(sabor => {
+      const id = `check-${sabor.replace(/\s/g, '')}`;
+      modalBody.innerHTML += `
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="${sabor}" id="${id}">
+          <label class="form-check-label" for="${id}">${sabor}</label>
+        </div>
+      `;
+    });
+
+    // Evento para limitar seleção
+    const checkboxes = modalBody.querySelectorAll('input[type=checkbox]');
+    checkboxes.forEach(cb => {
+      cb.checked = false;
+      cb.addEventListener('change', () => {
+        const selecionados = [...checkboxes].filter(i => i.checked);
+        if (selecionados.length > comboAtualQtd) {
+          cb.checked = false;
+          mostrarAlerta(`Você pode escolher no máximo ${comboAtualQtd} sabores.`);
+        }
+      });
+    });
+
+    modalSabores.show();
+  }
+
+  // Confirmar seleção do combo e adicionar ao carrinho
+  document.getElementById('btnConfirmarSabores').addEventListener('click', () => {
+    const modalBody = document.getElementById('modalSaboresBody');
+    const checkboxes = modalBody.querySelectorAll('input[type=checkbox]');
+    const selecionados = [...checkboxes].filter(cb => cb.checked).map(cb => cb.value);
+
+    if (selecionados.length !== comboAtualQtd) {
+      mostrarAlerta(`Por favor, selecione exatamente ${comboAtualQtd} sabores.`);
+      return;
+    }
+
+    // Adiciona cada sabor ao carrinho, incrementando quantidade se já existir
+    selecionados.forEach(sabor => {
+      const item = carrinho.find(i => i.nome === sabor && !i.combo);
+      if (item) {
+        item.qtd++;
+      } else {
+        carrinho.push({ nome: sabor, preco: 3, qtd: 1, combo: false });
+      }
+      atualizarQtdNaTela(sabor);
+    });
+
+    // Adiciona combo como um item especial
+    carrinho.push({ nome: comboAtualNome, preco: comboAtualPreco, qtd: 1, combo: true, detalhes: selecionados.join(', ') });
+
+    atualizarCarrinhoFixo();
+    modalSabores.hide();
+  });
+
+  // Adiciona combos surpresa ao carrinho
+  function addSurpresa(qtd, preco) {
+    const nome = `Presente Surpresa ${qtd} unidades`;
+    carrinho.push({ nome, preco, qtd: 1, combo: true, detalhes: 'Sabores surpresa' });
+    atualizarCarrinhoFixo();
+    mostrarAlerta(`${nome} adicionado ao carrinho!`);
+  }
+
+  // Mostrar alerta customizado
+  function mostrarAlerta(msg) {
+    document.getElementById('modalAlertBody').textContent = msg;
+    modalAlert.show();
+  }
+
+  // Bloquear datas passadas no input dataEntrega
+  function bloquearDatasPassadas() {
+    const input = document.getElementById('dataEntrega');
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dia = String(hoje.getDate()).padStart(2, '0');
+    input.min = `${ano}-${mes}-${dia}`;
+  }
+
+  // Finalizar pedido - envia mensagem via WhatsApp
+  document.getElementById('pedidoForm').addEventListener('submit', e => {
+    e.preventDefault();
+    if (carrinho.length === 0) {
+      mostrarAlerta('Seu carrinho está vazio! Adicione produtos antes de finalizar.');
+      return;
+    }
+
+    const nome = document.getElementById('nome').value.trim();
+    const data = document.getElementById('dataEntrega').value;
+    const obs = document.getElementById('observacoes').value.trim();
+    const localEntrega = document.getElementById('localEntrega').value;
 
     if (!nome) {
-      alert("Por favor, informe seu nome.");
+      mostrarAlerta('Por favor, preencha seu nome.');
       return;
     }
     if (!data) {
-      alert("Por favor, informe a data de entrega.");
-      return;
-    }
-    if (carrinho.length === 0) {
-      alert("Seu carrinho está vazio.");
+      mostrarAlerta('Por favor, selecione a data de entrega.');
       return;
     }
 
-    let mensagem = `Olá! Meu nome é ${nome}.%0A%0AQuero fazer o pedido para entrega na Faculdade no dia ${data}.%0A%0APedido:%0A`;
+    let resumo = '';
     carrinho.forEach(item => {
-      let detalhes = "";
-      if (item.sabores && item.sabores.length) {
-        detalhes = ` (Sabores: ${item.sabores.join(", ")})`;
+      resumo += `- ${item.nome} x${item.qtd}`;
+      if(item.combo && item.detalhes){
+        resumo += ` (Sabores: ${item.detalhes})`;
       }
-      mensagem += `- ${item.nome} x${item.qtd}${detalhes} - R$ ${(item.preco * item.qtd).toFixed(2)}%0A`;
+      resumo += `%0A`;
     });
-    const total = carrinho.reduce((acc, i) => acc + i.preco * i.qtd, 0);
-    mensagem += `%0ATotal: R$ ${total.toFixed(2)}%0A`;
-    mensagem += `Local de entrega: Faculdade%0A`;
-    mensagem += `Observações: ${obs || "Nenhuma"}`;
 
-    window.open(`https://wa.me/5561993768275?text=${mensagem}`, "_blank");
-  }
+    const total = carrinho.reduce((acc, item) => acc + item.preco * item.qtd, 0);
 
-  // Bloqueia datas passadas no input de data
-  function bloquearDatasPassadas() {
-    const inputData = document.getElementById("data");
-    const hoje = new Date();
-    const ano = hoje.getFullYear();
-    const mes = String(hoje.getMonth() + 1).padStart(2, "0");
-    const dia = String(hoje.getDate()).padStart(2, "0");
-    inputData.min = `${ano}-${mes}-${dia}`;
-  }
+    let mensagem = `🍫 *Nova encomenda de brigadeiros* 🍫%0A%0A`;
+    mensagem += `👤 Nome: ${nome}%0A`;
+    mensagem += `📍 Entrega: ${localEntrega}%0A`;
+    mensagem += `📅 Data: ${data}%0A`;
+    mensagem += `🧁 Itens:%0A${resumo}`;
+    mensagem += `💰 Total: R$ ${total.toFixed(2)}%0A`;
+    mensagem += `📝 Observações: ${obs || 'Nenhuma'}%0A`;
 
+    window.open(`https://wa.me/5561993768275?text=${mensagem}`, '_blank');
+  });
+
+  // Inicializações
+  montarSabores();
   bloquearDatasPassadas();
-  gerarSabores();
-  gerarCombos();
-  atualizarCarrinho();
-
+  atualizarCarrinhoFixo();
 </script>
-
 </body>
 </html>
