@@ -1,107 +1,102 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Encomendas de Brigadeiro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Brigadeiros da Alegria 🍬</title>
+  <meta name="description" content="Encomende brigadeiros artesanais com entrega na faculdade! Preço único R$ 3,00 por unidade." />
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0; padding: 0;
-      background: #fff8f0;
-    }
-    header {
-      background: #e91e63;
+    body { background: #fff8f0; }
+    .btn-whatsapp {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25d366;
       color: white;
-      padding: 20px;
-      text-align: center;
+      padding: 15px 20px;
+      border-radius: 9999px;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
     }
-    main {
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
-    }
-    h2 {
-      color: #c2185b;
-    }
-    .form-group, .product, .combo, .cart {
-      background: white;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-    }
-    input[type="text"], input[type="date"], input[type="number"] {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      background: #e91e63;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      width: 100%;
-      font-size: 16px;
-    }
-    button:hover {
-      background: #c2185b;
-    }
-    ul {
-      padding-left: 20px;
+    .btn-whatsapp:hover {
+      background-color: #1ebe57;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1>🍫 Encomendas de Brigadeiro</h1>
-    <p>Faça seu pedido e receba direto na faculdade!</p>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-pink-600 text-white text-center py-6 shadow-md">
+    <h1 class="text-3xl font-extrabold mb-1">Brigadeiros da Alegria 🍬</h1>
+    <p class="text-lg font-light italic">Brigadeiros que derretem no coração 💖</p>
   </header>
-  <main>
-    <div class="form-group">
-      <label>Nome completo:</label>
-      <input type="text" id="nome" required>
-    </div>
-    <div class="form-group">
-      <label>Data da entrega:</label>
-      <input type="date" id="dataEntrega" required>
-    </div>
-    <div class="form-group">
-      <label>Observações:</label>
-      <input type="text" id="observacoes">
-    </div>
 
-    <h2>Sabores Individuais - R$ 3,00</h2>
-    <div class="product">
-      <label>Beijinho:</label><input type="number" id="beijinho" value="0" min="0">
-      <label>Nutella:</label><input type="number" id="nutella" value="0" min="0">
-      <label>Ninho com Nutella:</label><input type="number" id="ninho" value="0" min="0">
-      <label>Tradicional:</label><input type="number" id="tradicional" value="0" min="0">
-    </div>
+  <!-- Main -->
+  <main class="flex-grow container mx-auto px-4 py-8 max-w-4xl">
 
-    <h2>Combo Promocional - 4 por R$ 10,00</h2>
-    <div class="combo">
-      <label>Sabores do combo:</label>
-      <input type="text" id="comboSabores" placeholder="Ex: Nutella, Beijinho, Ninho, Tradicional">
-    </div>
+    <!-- Sabores -->
+    <section>
+      <h2 class="text-2xl font-semibold mb-6 text-pink-700">Sabores Individuais - R$ 3,00</h2>
+      <div id="sabores" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+    </section>
 
-    <button onclick="adicionarAoCarrinho()">Adicionar ao carrinho</button>
+    <!-- Carrinho -->
+    <section class="mt-10">
+      <h2 class="text-2xl font-semibold mb-4 text-pink-700">🛒 Seu Carrinho</h2>
+      <div id="carrinho" class="bg-white rounded-lg shadow p-4 min-h-[100px]">
+        <p class="text-gray-500">Nenhum item no carrinho.</p>
+      </div>
+      <p class="mt-3 font-bold text-lg text-pink-600" id="total">Total: R$ 0,00</p>
+    </section>
 
-    <div class="cart">
-      <h2>🛒 Carrinho</h2>
-      <ul id="carrinho"></ul>
-      <p><strong>Total: R$ <span id="total">0.00</span></strong></p>
-      <button onclick="enviarPedido()">Finalizar Pedido via WhatsApp</button>
-    </div>
+    <!-- Finalização do pedido -->
+    <section class="mt-10 bg-white p-6 rounded-lg shadow">
+      <h2 class="text-2xl font-semibold mb-4 text-pink-700">Finalizar Pedido</h2>
+      <form id="formulario" class="space-y-4">
+
+        <div>
+          <label for="nome" class="block font-medium text-gray-700 mb-1">Nome Completo *</label>
+          <input type="text" id="nome" name="nome" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-pink-500" />
+        </div>
+
+        <div>
+          <label for="endereco" class="block font-medium text-gray-700 mb-1">Endereço *</label>
+          <input type="text" id="endereco" name="endereco" value="Faculdade" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-pink-500" />
+        </div>
+
+        <div>
+          <label for="dataEntrega" class="block font-medium text-gray-700 mb-1">Data da Entrega *</label>
+          <input type="date" id="dataEntrega" name="dataEntrega" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-pink-500" />
+        </div>
+
+        <div>
+          <label for="observacoes" class="block font-medium text-gray-700 mb-1">Observações</label>
+          <textarea id="observacoes" name="observacoes" rows="3" placeholder="Ex: sem granulado, alérgico a leite..." class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-pink-500"></textarea>
+        </div>
+
+        <button type="submit" class="w-full bg-pink-600 text-white font-semibold py-3 rounded hover:bg-pink-700 transition">Finalizar Pedido via WhatsApp</button>
+      </form>
+    </section>
   </main>
+
+  <!-- Footer -->
+  <footer class="bg-pink-100 text-center py-4 mt-10 text-pink-800 font-light">
+    <p>Feito com amor, entregue com carinho ❤️</p>
+    <p>Contato: <a href="https://wa.me/5561993768275" target="_blank" class="underline">WhatsApp</a> | <a href="#" class="underline">Instagram</a></p>
+  </footer>
+
+  <!-- Botão WhatsApp fixo -->
+  <a href="https://wa.me/5561993768275" target="_blank" aria-label="WhatsApp" class="btn-whatsapp">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="white" viewBox="0 0 24 24" stroke="none"><path d="M20.52 3.48A11.925 11.925 0 0012.002 0C5.373 0 0 5.372 0 12c0 2.119.55 4.17 1.6 5.976L0 24l6.163-1.608a11.91 11.91 0 005.838 1.59h.004c6.63 0 12-5.373 12-12 0-3.212-1.25-6.217-3.484-8.492zM12 21.737c-1.905 0-3.737-.512-5.333-1.48l-.38-.226-3.64.95.974-3.556-.247-.366a9.978 9.978 0 01-1.527-5.521c0-5.521 4.483-10.004 10.004-10.004 2.673 0 5.188 1.042 7.073 2.932 1.9 1.9 2.94 4.47 2.94 7.08 0 5.521-4.485 10.004-10.004 10.004z"/><path d="M16.004 13.96c-.264-.132-1.565-.77-1.808-.858-.242-.088-.418-.132-.594.132-.176.264-.68.858-.834 1.034-.154.176-.308.198-.572.066-.264-.132-1.112-.41-2.12-1.312-.784-.7-1.312-1.56-1.466-1.824-.154-.264-.016-.406.116-.538.118-.117.264-.308.396-.462.132-.154.176-.264.264-.44.088-.176.044-.33-.022-.462-.066-.132-.594-1.428-.814-1.95-.214-.512-.43-.443-.594-.452l-.51-.009c-.176 0-.462.066-.704.33s-.924.905-.924 2.204c0 1.3.946 2.56 1.08 2.738.132.176 1.86 2.838 4.508 3.978.63.272 1.12.434 1.5.555.63.202 1.2.173 1.65.105.504-.076 1.565-.64 1.786-1.26.22-.62.22-1.15.154-1.26-.066-.11-.24-.176-.504-.308z"/></svg>
+    WhatsApp
+  </a>
 
   <script>
     // Bloquear datas passadas
@@ -112,68 +107,147 @@
     const dia = String(hoje.getDate()).padStart(2, "0");
     inputData.min = `${ano}-${mes}-${dia}`;
 
-    let total = 0;
-    let itens = [];
+    // Dados dos sabores
+    const sabores = [
+      { id: 1, nome: 'Tradicional', preco: 3.00, img: 'https://i.imgur.com/qTOp1v0.jpg' },
+      { id: 2, nome: 'Ninho', preco: 3.00, img: 'https://i.imgur.com/WvPoKRa.jpg' },
+      { id: 3, nome: 'Morango', preco: 3.00, img: 'https://i.imgur.com/IJoCg4L.jpg' },
+      { id: 4, nome: 'Ninho com Nutella', preco: 3.00, img: 'https://i.imgur.com/CrqHTOg.jpg' },
+      { id: 5, nome: 'Meio Amargo', preco: 3.00, img: 'https://i.imgur.com/4XaP72G.jpg' },
+      { id: 6, nome: 'Beijinho', preco: 3.00, img: 'https://i.imgur.com/lSBEURm.jpg' }
+    ];
 
-    function adicionarAoCarrinho() {
-      let carrinho = document.getElementById('carrinho');
-      let totalSpan = document.getElementById('total');
-      let sabores = ['beijinho', 'nutella', 'ninho', 'tradicional'];
-      let precoUnitario = 3;
-      let precoCombo = 10;
-      carrinho.innerHTML = '';
-      itens = [];
-      total = 0;
+    let carrinho = [];
 
+    const saboresContainer = document.getElementById('sabores');
+    const carrinhoDiv = document.getElementById('carrinho');
+    const totalSpan = document.getElementById('total');
+
+    // Renderizar sabores com controles
+    function renderSabores() {
+      saboresContainer.innerHTML = '';
       sabores.forEach(sabor => {
-        let qtd = parseInt(document.getElementById(sabor).value);
-        if (qtd > 0) {
-          let preco = qtd * precoUnitario;
-          total += preco;
-          itens.push(`${qtd}x ${sabor} (R$ ${preco.toFixed(2)})`);
-        }
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-lg shadow-md overflow-hidden flex flex-col items-center p-4';
+        card.innerHTML = `
+          <img src="${sabor.img}" alt="${sabor.nome}" class="w-32 h-32 object-cover rounded mb-3 shadow"/>
+          <h3 class="font-semibold text-lg text-pink-700 mb-1">${sabor.nome}</h3>
+          <p class="text-pink-600 font-bold mb-2">R$ ${sabor.preco.toFixed(2)}</p>
+          <div class="flex items-center space-x-3 mb-2">
+            <button aria-label="Diminuir quantidade" class="quant-btn bg-pink-300 px-3 py-1 rounded text-white font-bold hover:bg-pink-400">-</button>
+            <span id="quant-${sabor.id}" class="font-bold text-lg">0</span>
+            <button aria-label="Aumentar quantidade" class="quant-btn bg-pink-600 px-3 py-1 rounded text-white font-bold hover:bg-pink-700">+</button>
+          </div>
+          <button aria-label="Remover sabor" class="remove-btn text-sm text-red-600 hover:underline">Remover</button>
+        `;
+        saboresContainer.appendChild(card);
+
+        // Eventos dos botões
+        const btns = card.querySelectorAll('.quant-btn');
+        btns[0].addEventListener('click', () => alterarQuantidade(sabor.id, -1));
+        btns[1].addEventListener('click', () => alterarQuantidade(sabor.id, +1));
+        card.querySelector('.remove-btn').addEventListener('click', () => removerSabor(sabor.id));
       });
-
-      let comboSabores = document.getElementById('comboSabores').value;
-      if (comboSabores.trim() !== '') {
-        let qtdSabores = comboSabores.split(',').map(s => s.trim()).filter(Boolean);
-        if (qtdSabores.length <= 4) {
-          total += precoCombo;
-          itens.push(`Combo 4 sabores: ${comboSabores} (R$ 10,00)`);
-        } else {
-          alert('Você só pode escolher até 4 sabores no combo!');
-          return;
-        }
-      }
-
-      itens.forEach(item => {
-        let li = document.createElement('li');
-        li.textContent = item;
-        carrinho.appendChild(li);
-      });
-
-      totalSpan.textContent = total.toFixed(2);
     }
 
-    function enviarPedido() {
-      let nome = document.getElementById('nome').value;
-      let data = document.getElementById('dataEntrega').value;
-      let obs = document.getElementById('observacoes').value;
+    // Alterar quantidade no carrinho
+    function alterarQuantidade(id, delta) {
+      const itemIndex = carrinho.findIndex(i => i.id === id);
+      if (itemIndex < 0 && delta > 0) {
+        carrinho.push({...sabores.find(s => s.id === id), quantidade: 1});
+      } else if (itemIndex >= 0) {
+        let novaQtd = carrinho[itemIndex].quantidade + delta;
+        if (novaQtd <= 0) {
+          carrinho.splice(itemIndex, 1);
+        } else {
+          carrinho[itemIndex].quantidade = novaQtd;
+        }
+      }
+      atualizarInterface();
+    }
 
-      if (!nome || !data || itens.length === 0) {
-        alert('Preencha o nome, a data de entrega e adicione itens ao carrinho!');
+    // Remover sabor diretamente
+    function removerSabor(id) {
+      carrinho = carrinho.filter(i => i.id !== id);
+      atualizarInterface();
+    }
+
+    // Atualiza carrinho visual e totais
+    function atualizarInterface() {
+      // Atualizar quantidades no grid
+      sabores.forEach(sabor => {
+        const span = document.getElementById(`quant-${sabor.id}`);
+        const item = carrinho.find(i => i.id === sabor.id);
+        span.textContent = item ? item.quantidade : 0;
+      });
+
+      // Atualizar carrinho texto
+      if (carrinho.length === 0) {
+        carrinhoDiv.innerHTML = `<p class="text-gray-500">Nenhum item no carrinho.</p>`;
+        totalSpan.textContent = 'Total: R$ 0,00';
+        return;
+      }
+      let html = '';
+      let total = 0;
+      carrinho.forEach(item => {
+        const subtotal = item.quantidade * item.preco;
+        total += subtotal;
+        html += `
+          <div class="flex justify-between items-center border-b border-pink-200 py-2">
+            <div>
+              <p class="font-semibold">${item.nome} <span class="text-pink-600">x${item.quantidade}</span></p>
+              <p class="text-pink-500 text-sm">R$ ${subtotal.toFixed(2)}</p>
+            </div>
+            <button aria-label="Remover do carrinho" class="text-red-600 hover:underline text-sm" onclick="removerSabor(${item.id})">Remover</button>
+          </div>
+        `;
+      });
+      carrinhoDiv.innerHTML = html;
+      totalSpan.textContent = `Total: R$ ${total.toFixed(2)}`;
+    }
+
+    // Enviar pedido para WhatsApp
+    document.getElementById('formulario').addEventListener('submit', e => {
+      e.preventDefault();
+
+      if (carrinho.length === 0) {
+        alert('Seu carrinho está vazio! Adicione pelo menos um sabor.');
         return;
       }
 
-      let mensagem = `🍫 NOVA ENCOMENDA 🍬%0A%0A` +
-                     `👤 Cliente: ${nome}%0A` +
-                     `📅 Entrega: ${data}%0A` +
-                     `🧁 Itens:%0A- ` + itens.join('%0A- ') + `%0A` +
-                     `💵 Total: R$ ${total.toFixed(2)}%0A` +
-                     `📝 Observações: ${obs || 'Nenhuma'}`;
+      const form = e.target;
+      const nome = form.nome.value.trim();
+      const endereco = form.endereco.value.trim();
+      const dataEntrega = form.dataEntrega.value;
+      const observacoes = form.observacoes.value.trim() || 'Nenhuma';
 
-      window.open(`https://wa.me/5561993768275?text=${mensagem}`, '_blank');
-    }
+      if (!nome || !endereco || !dataEntrega) {
+        alert('Por favor, preencha todos os campos obrigatórios: Nome, Endereço e Data da entrega.');
+        return;
+      }
+
+      let texto = `🍫 *NOVA ENCOMENDA* 🍬%0A%0A`;
+      texto += `👤 *Cliente:* ${nome}%0A`;
+      texto += `🏠 *Endereço:* ${endereco}%0A`;
+      texto += `📅 *Data da entrega:* ${dataEntrega}%0A`;
+      texto += `🧁 *Itens:*%0A`;
+
+      let total = 0;
+      carrinho.forEach(item => {
+        const subtotal = item.quantidade * item.preco;
+        total += subtotal;
+        texto += `• ${item.nome} x${item.quantidade} - R$ ${subtotal.toFixed(2)}%0A`;
+      });
+
+      texto += `%0A*Total:* R$ ${total.toFixed(2)}%0A`;
+      texto += `%0A📝 *Observações:* ${observacoes}`;
+
+      const url = `https://wa.me/5561993768275?text=${texto}`;
+      window.open(url, '_blank');
+    });
+
+    renderSabores();
+    atualizarInterface();
   </script>
 </body>
 </html>
